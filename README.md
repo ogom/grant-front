@@ -1,31 +1,62 @@
 # GrantFront
 
-TODO: Write a gem description
+[![Gem Version](https://badge.fury.io/rb/grant-front.png)](https://rubygems.org/gems/grant-front) [![Build Status](https://travis-ci.org/ogom/grant-front.png?branch=master)](https://travis-ci.org/ogom/grant-front)
+
+Authorization Grant Front on Rails.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
+```
 gem 'grant-front'
 ```
 
 And then execute:
 
-    $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install grant-front
+```
+$ gem install grant-front
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+class UserPolicy < ApplicationPolicy
+  def index?
+    grant :admin, :foo, :bar
+  end
 
-## Contributing
+  def create?
+    index?
+  end
 
-1. Fork it ( https://github.com/[my-github-username]/grant-front/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+  def grant(*roles)
+    if GrantFront.store
+      GrantFront.authorizations.last[:roles] = roles
+    else
+      roles.each do |role|
+        return true if user.roles.include? role
+      end
+      false
+    end
+  end
+end
+```
+
+```
+$ rake grant_front:draw
+| class | method | roles |
+|:-----:|:------:|:-----:|
+| UserPolicy | index? | admin,foo,bar |
+| UserPolicy | create? | admin,foo,bar |
+```
+
+## License
+
+* MIT
