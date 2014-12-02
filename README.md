@@ -1,6 +1,6 @@
 # GrantFront
 
-[![Gem Version](https://badge.fury.io/rb/grant-front.png)](https://rubygems.org/gems/grant-front) [![Build Status](https://travis-ci.org/ogom/grant-front.png?branch=master)](https://travis-ci.org/ogom/grant-front)
+[![Gem Version](https://badge.fury.io/rb/grant-front.svg)](http://badge.fury.io/rb/grant-front) [![Build Status](https://travis-ci.org/ogom/grant-front.png?branch=master)](https://travis-ci.org/ogom/grant-front)
 
 Authorization Grant Front on Rails.
 
@@ -32,6 +32,14 @@ class UserPolicy < ApplicationPolicy
     grant :foo, :bar, :baz
   end
 
+  def update?
+    grant :foo, :bar
+  end
+
+  def destroy?
+    grant :bar, :baz
+  end
+
   def grant(*roles)
     roles.each do |role|
       return true if user.roles.include? role
@@ -48,7 +56,8 @@ $ rake grant_front:draw
 ||foo|bar|baz|
 |:-:|:-:|:-:|:-:|
 |create|o|o|o|
-|new|o|o|o|
+|update|o|o||
+|destroy||o|o|
 
 
 ## License
