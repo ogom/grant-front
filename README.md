@@ -28,34 +28,28 @@ $ gem install grant-front
 
 ```
 class UserPolicy < ApplicationPolicy
-  def index?
-    grant :admin, :foo, :bar
-  end
-
   def create?
-    index?
+    grant :foo, :bar, :baz
   end
 
   def grant(*roles)
-    if GrantFront.store
-      GrantFront.authorizations.last[:roles] = roles
-    else
-      roles.each do |role|
-        return true if user.roles.include? role
-      end
-      false
+    roles.each do |role|
+      return true if user.roles.include? role
     end
+    return false, roles
   end
 end
 ```
 
 ```
 $ rake grant_front:draw
-| class | method | roles |
-|:-----:|:------:|:-----:|
-| UserPolicy | index? | admin,foo,bar |
-| UserPolicy | create? | admin,foo,bar |
 ```
+
+||foo|bar|baz|
+|:-:|:-:|:-:|:-:|
+|create|o|o|o|
+|new|o|o|o|
+
 
 ## License
 
