@@ -27,6 +27,18 @@ $ gem install grant-front
 ## Usage
 
 ```
+class ApplicationPolicy
+  include GrantFront
+  attr_reader :user, :record
+
+  def initialize(user, record)
+    @user = user
+    @record = record
+  end
+end
+```
+
+```
 class UserPolicy < ApplicationPolicy
   def create?
     grant :foo, :bar, :baz
@@ -38,13 +50,6 @@ class UserPolicy < ApplicationPolicy
 
   def destroy?
     grant :bar, :baz
-  end
-
-  def grant(*roles)
-    roles.each do |role|
-      return true if user.roles.include? role
-    end
-    return false, roles
   end
 end
 ```

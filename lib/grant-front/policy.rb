@@ -19,13 +19,14 @@ module GrantFront
         raw = {methods: {}, roles: []}
         reg = Regexp.new(/\?$/)
         user = Struct.new(:id, :roles).new(1, [])
+        ApplicationPolicy.mock!
 
         policy = klass.new(user, user)
         policy.methods.each do |name|
           if name =~ reg
             owner = policy.method(name).owner
             if owner == klass or owner == ApplicationPolicy
-              allow, roles = policy.send(name)
+              roles = policy.send(name)
               roles ||= []
               raw[:methods][name.to_s.gsub(reg, '').to_sym] = roles
               raw[:roles] += roles
@@ -33,6 +34,7 @@ module GrantFront
             end
           end
         end
+        ApplicationPolicy.unmock!
 
         raw
       end

@@ -1,20 +1,13 @@
 require 'grant-front'
 
 class ApplicationPolicy
+  include GrantFront
   attr_reader :user, :record
 
   def initialize(user, record)
     @user = user
     @record = record
   end
-
-  private
-    def grant(*roles)
-      roles.each do |role|
-        return true if user.roles.include? role
-      end
-      return false, roles
-    end
 end
 
 class UserPolicy < ApplicationPolicy
