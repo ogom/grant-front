@@ -1,6 +1,7 @@
-require 'grant-front/version'
-require 'grant-front/grant'
-require 'grant-front/policy'
+require_relative 'grant-front/version'
+require_relative 'grant-front/policy'
+require_relative 'grant-front/diagram'
+require_relative 'grant-front/engine'
 
 module GrantFront
   def self.included(klass)
@@ -32,4 +33,4 @@ module GrantFront
     end
 end
 
-require 'grant-front/rails' if defined? Rails::Railtie
+require_relative 'grant-front/rails' if defined? Rails::Railtie

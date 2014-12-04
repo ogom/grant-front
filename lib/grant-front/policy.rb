@@ -1,26 +1,42 @@
 module GrantFront
   class Policy
     class << self
-      def all
-        requires
+      def all(options={})
+        options[:rake] = true if options[:rake].nil?
 
-        Object.constants.inject([]) do |arr, name|
-          unless name == :Config
-            klass = Object.const_get(name)
-            if klass.class == Class && klass.superclass == ApplicationPolicy
-              arr << klass
+        if defined? Rails
+          path = Rails.root.join('app/policies/*.rb').to_s
+          constants = Dir.glob(path).inject([]) do |arr, item|
+            require item if options[:rake]
+            name = File.basename(item, '.*')
+            unless name == 'application_policy'
+              arr << Object.const_get(name.camelize)
             end
+            arr
           end
-          arr
         end
+
+        if options[:rake]
+          constants = Object.constants.inject([]) do |arr, name|
+            unless name == :Config
+              klass = Object.const_get(name)
+              if klass.class == Class && klass.superclass == ApplicationPolicy
+                arr << klass
+              end
+            end
+            arr
+          end
+        end
+
+        constants
       end
 
       def find(klass=nil)
         raw = {methods: {}, roles: []}
         reg = Regexp.new(/\?$/)
         user = Struct.new(:id, :roles).new(1, [])
-        ApplicationPolicy.mock!
 
+        klass.mock!
         policy = klass.new(user, user)
         policy.methods.each do |name|
           if name =~ reg
@@ -34,18 +50,9 @@ module GrantFront
             end
           end
         end
-        ApplicationPolicy.unmock!
+        klass.unmock!
 
         raw
-      end
-
-      private
-      def requires
-        if defined? Rails
-          Dir.glob(Rails.root.join('app/policies/*.rb').to_s).each do |name|
-            require name
-          end
-        end
       end
     end
   end
