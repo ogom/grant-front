@@ -21,7 +21,7 @@ module GrantFront
         text += "\n### #{policy.to_s.gsub(/Policy$/, '')} \n\n"
         if policies[policy][:roles].count > 0
           text += "||#{policies[policy][:roles].join('|')}|\n"
-          text += "|:-:|#{policies[policy][:roles].map{':-:'}.join('|')}|\n"
+          text += "|:-|#{policies[policy][:roles].map{':-:'}.join('|')}|\n"
           policies[policy][:methods].keys.each do |method|
             raw = "|#{method}|"
             policies[policy][:roles].each do |role|

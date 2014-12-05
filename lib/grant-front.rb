@@ -15,7 +15,6 @@ module GrantFront
     end
 
     def unmock!
-      return unless method_defined? :mock_grant
       alias_method :grant, :keep_grant
     end
   end
