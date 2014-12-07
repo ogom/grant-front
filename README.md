@@ -38,13 +38,15 @@ Draw by rake command:
 
 ```
 $ rake grant_front:draw
-```
+
+### User
 
 ||foo|bar|baz|
 |:-|:-:|:-:|:-:|
 |create|o|o|o|
 |update|o|o||
 |destroy||o|o|
+```
 
 ## Policy Example
 
