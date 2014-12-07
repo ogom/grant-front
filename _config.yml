@@ -1,0 +1,13 @@
+---
+markdown: kramdown
+kramdown:
+  input: GFM
+pygments: true
+baseurl: "/grant-front"
+encoding: UTF-8
+exclude:
+- README.md
+- tmp
+name: GrantFront
+copyright: 2014, ogom
+theme: cosmo
