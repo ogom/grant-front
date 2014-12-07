@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/grant-front.svg)](http://badge.fury.io/rb/grant-front) [![Build Status](https://travis-ci.org/ogom/grant-front.png?branch=master)](https://travis-ci.org/ogom/grant-front)
 
-Authorization Grant Front on Rails.
+Policies grant of role for authorization on Rails.
 
 ## Installation
 
@@ -18,15 +18,44 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
-
-```
-$ gem install grant-front
-```
-
 ## Usage
 
-### Policy Example
+### Rack
+
+Add this line to your `config/routes.rb`:
+
+```
+mount GrantFront::Engine, at: '/rails/info/policies'
+```
+
+Draw by selecting the policy:
+
+![example](http://ogom.github.io/grant-front/assets/img/example.png)
+
+### Rake
+
+Draw by rake command:
+
+```
+$ rake grant_front:draw
+```
+
+||foo|bar|baz|
+|:-|:-:|:-:|:-:|
+|create|o|o|o|
+|update|o|o||
+|destroy||o|o|
+
+## Policy Example
+
+Install the [Pundit](https://github.com/elabs/pundit), and to the generate:
+
+```
+$ rails generate pundit:install
+$ rails generate pundit:policy user
+```
+
+Include **GrantFront** line to your `policies/application_policy.rb`:
 
 ```
 class ApplicationPolicy
@@ -39,6 +68,8 @@ class ApplicationPolicy
   end
 end
 ```
+
+Add **grant** line to your `policies/user_policy.rb`:
 
 ```
 class UserPolicy < ApplicationPolicy
@@ -54,26 +85,6 @@ class UserPolicy < ApplicationPolicy
     grant :bar, :baz
   end
 end
-```
-
-### Rake
-
-```
-$ rake grant_front:draw
-```
-
-||foo|bar|baz|
-|:-:|:-:|:-:|:-:|
-|create|o|o|o|
-|update|o|o||
-|destroy||o|o|
-
-### Rack
-
-Add this line to your `config/routes.rb`:
-
-```
-mount GrantFront::Engine, at: '/rails/info/policies'
 ```
 
 ## License
