@@ -7,13 +7,12 @@ module GrantFront
         options[:rake] = true if options[:rake].nil?
 
         if defined? Rails
-          path = Rails.root.join('app/policies/*.rb').to_s
-          constants = Dir.glob(path).inject([]) do |arr, item|
+          policies_path = Rails.root.join('app/policies/').to_s
+          policie_path = Rails.root.join(policies_path, '**/*.rb').to_s
+          constants = Dir.glob(policie_path).inject([]) do |arr, item|
             require item if options[:rake]
-            name = File.basename(item, '.*')
-            unless name == 'application_policy'
-              arr << self.new(name.camelize)
-            end
+            klass = item.gsub(policies_path, '').gsub('.rb', '').camelcase
+            arr << self.new(klass) unless klass == 'ApplicationPolicy'
             arr
           end
         end
